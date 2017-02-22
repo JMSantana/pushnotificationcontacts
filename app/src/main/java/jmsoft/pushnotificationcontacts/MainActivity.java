@@ -20,8 +20,8 @@ import jmsoft.pushnotificationcontacts.util.Util;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_ASK_PERMISSIONS = 123;
-    private String phoneNumberToSearch;
-    private ContactsService contactsService;
+    private String mPhoneNumberToSearch;
+    private ContactsService mContactsService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,28 +41,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Setup ContactsService
-        contactsService = new ContactsService(this);
+        mContactsService = new ContactsService(this);
 
         //Get the extras from the intent, if there is a phoneNumber, then, a new push has come
-        phoneNumberToSearch = getExtrasFromNotification();
+        mPhoneNumberToSearch = getExtrasFromNotification();
 
-        if(phoneNumberToSearch != null && !phoneNumberToSearch.isEmpty()){
-            contactsService.setPhoneNumberToSearch(phoneNumberToSearch);
-            if(checkContactPermission()){
-                contactsService.searchContact();
+        if(mPhoneNumberToSearch != null && !mPhoneNumberToSearch.isEmpty()){
+            mContactsService.setPhoneNumberToSearch(mPhoneNumberToSearch);
+            if(checkContactReadPermission()){
+                mContactsService.searchContact();
             }
         } else {
-            //Get the last contactId if it exists
-            String contactString = contactsService.getContactIdFromInternalStorage();
+            //Get the last contact info if it exists
+            String contactString = mContactsService.getContactFromInternalStorage();
             if(contactString != null && !contactString.isEmpty()) {
                 String[] contactSplitter = contactString.split(":");
 
                 Contact contact = new Contact();
+                //If the user does not input any name, the very phone number becomes the name. Id is mandatory
                 contact.setId(Integer.parseInt(contactSplitter[0]));
                 contact.setName(contactSplitter[1]);
                 contact.setPhone(contactSplitter[2]);
 
-                contactsService.openContactDetails(contact);
+                mContactsService.openContactDetails(contact);
             }
         }
     }
@@ -81,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch ( requestCode ) {
             case REQUEST_CODE_ASK_PERMISSIONS: {
-                if(phoneNumberToSearch != null && !phoneNumberToSearch.isEmpty() && grantResults[0] == 0){
-                    contactsService.searchContact();
+                if(mPhoneNumberToSearch != null && !mPhoneNumberToSearch.isEmpty() && grantResults[0] == 0){
+                    mContactsService.searchContact();
                 } else {
                     finish();
                 }
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkContactPermission(){
+    public boolean checkContactReadPermission(){
         boolean permissionGranted = true;
         int permissionCheck = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.READ_CONTACTS);

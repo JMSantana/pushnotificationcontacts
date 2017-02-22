@@ -23,7 +23,7 @@ public class ContactCardActivity extends AppCompatActivity {
         TextView tvName = (TextView) findViewById(R.id.tvName);
         TextView tvPhone = (TextView) findViewById(R.id.tvPhone);
 
-    tvId.setText(tvId.getText().toString() + " " + contactId);
+        tvId.setText(tvId.getText().toString() + " " + contactId);
         tvName.setText(tvName.getText().toString() + " " + name);
         tvPhone.setText(tvPhone.getText().toString() + " " + phone);
     }

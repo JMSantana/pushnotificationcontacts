@@ -9,9 +9,6 @@ import jmsoft.pushnotificationcontacts.util.Util;
 
 public class MessagingService extends FirebaseMessagingService {
 
-    public MessagingService() {
-    }
-
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(Util.getAppTag(), "From: " + remoteMessage.getFrom());
