@@ -48,7 +48,10 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".PermissionActivity"></activity>
+        <activity android:name=".PermissionActivity" />
+        <activity
+            android:name=".ContactCardActivity">
+        </activity>
     </application>
 
 </manifest>

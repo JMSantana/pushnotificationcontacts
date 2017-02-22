@@ -2,6 +2,10 @@
     <string name="app_name">Push Notification Contacts</string>
     <string name="get_token">Get token</string>
     <string name="no_contact_found">No contact found for the given phone number.</string>
+    <string name="contact">Contact</string>
+    <string name="id">Contact Id:</string>
+    <string name="name">Name:</string>
+    <string name="phone">Phone:</string>
     <string name="permission_denied">Contacts read permission denied. Please, allow the app to read your contacts.</string>
     <string name="explanation">Tap the button to get a token from FCM. The token is used inside the Postman request so FCM can send the push notification only to the device which has the token.</string>
 </resources>

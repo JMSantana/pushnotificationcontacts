@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import jmsoft.pushnotificationcontacts.entity.Contact;
+
 /**
  * Created by joao.marco on 22/02/2017.
  */
@@ -21,9 +23,9 @@ public class InternalStorageService {
         this.context = context;
     }
 
-    public void storeToInternalStorage(String string){
+    public void storeToInternalStorage(Contact contact){
         try{
-
+            String string = String.valueOf(contact.getId()) + ":" + contact.getName() + ":" + contact.getPhone();
             FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
             fos.write(string.getBytes());
             fos.close();

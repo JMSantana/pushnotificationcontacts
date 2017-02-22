@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import jmsoft.pushnotificationcontacts.entity.Contact;
 import jmsoft.pushnotificationcontacts.service.ContactsService;
 import jmsoft.pushnotificationcontacts.util.Util;
 
@@ -52,11 +53,16 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             //Get the last contactId if it exists
-            int contactId = contactsService.getContactIdFromInternalStorage();
+            String contactString = contactsService.getContactIdFromInternalStorage();
+            if(contactString != null && !contactString.isEmpty()) {
+                String[] contactSplitter = contactString.split(":");
 
-            //If there is a last contact, show the details
-            if(contactId > 0){
-                contactsService.openContactDetails(contactId);
+                Contact contact = new Contact();
+                contact.setId(Integer.parseInt(contactSplitter[0]));
+                contact.setName(contactSplitter[1]);
+                contact.setPhone(contactSplitter[2]);
+
+                contactsService.openContactDetails(contact);
             }
         }
     }
