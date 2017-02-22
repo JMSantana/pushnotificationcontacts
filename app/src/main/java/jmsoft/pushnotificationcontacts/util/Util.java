@@ -1,4 +1,4 @@
-package jmsoft.pushnotificationcontacts.utils;
+package jmsoft.pushnotificationcontacts.util;
 
 /**
  * Created by joaom on 21/02/2017.

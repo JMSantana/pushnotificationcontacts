@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import jmsoft.pushnotificationcontacts.service.ContactsService;
-import jmsoft.pushnotificationcontacts.utils.Util;
+import jmsoft.pushnotificationcontacts.util.Util;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             //Get the last contactId if it exists
-            int contactId = contactsService.getContactId();
+            int contactId = contactsService.getContactIdFromInternalStorage();
 
             //If there is a last contact, show the details
             if(contactId > 0){
@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[] {Manifest.permission.READ_CONTACTS},
                     REQUEST_CODE_ASK_PERMISSIONS);
         }
-
         return permissionGranted;
     }
 }

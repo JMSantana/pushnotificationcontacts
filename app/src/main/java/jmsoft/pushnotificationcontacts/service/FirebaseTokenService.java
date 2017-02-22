@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import jmsoft.pushnotificationcontacts.utils.Util;
+import jmsoft.pushnotificationcontacts.util.Util;
 
 /**
  * Created by joaom on 21/02/2017.

@@ -2,17 +2,17 @@ package jmsoft.pushnotificationcontacts.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.widget.Toast;
 
 import jmsoft.pushnotificationcontacts.PermissionActivity;
 import jmsoft.pushnotificationcontacts.R;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 /**
  * Created by joaom on 21/02/2017.
@@ -22,12 +22,11 @@ public class ContactsService{
 
     private Context context;
     private String phoneNumberToSearch;
+    private InternalStorageService iss;
 
     public ContactsService(Context context){
         this.context = context;
     }
-
-    private SharedPreferences prefs;
 
     public void searchContact() {
         boolean contactFound = false;
@@ -43,7 +42,7 @@ public class ContactsService{
                 if(phoneNumberToSearch.equals(phoneNumber)){
                     contactFound = true;
 
-                    storeContactId(phoneContactID);
+                    storeContactIdToInternalStorage(phoneContactID);
 
                     openContactDetails(phoneContactID);
                 }
@@ -52,7 +51,7 @@ public class ContactsService{
             phones.close();
 
             if(!contactFound){
-                clearContactIdFromPreferences();
+                clearContactIdFromInternalStorage();
 
                 Handler handler = new Handler(Looper.getMainLooper());
 
@@ -71,35 +70,43 @@ public class ContactsService{
 
                 @Override
                 public void run() {
-                    Toast.makeText(context, context.getResources().getString(R.string.permission_denied),Toast.LENGTH_LONG).show();
+                Toast.makeText(context, context.getResources().getString(R.string.permission_denied),Toast.LENGTH_LONG).show();
+                Intent i = new Intent(context, PermissionActivity.class);
+                i.setFlags(FLAG_ACTIVITY_NEW_TASK);
+                i.putExtra("phoneNumberToSearch", phoneNumberToSearch);
+                context.startActivity(i);
                 }
             });
-            Intent i = new Intent(context, PermissionActivity.class);
-            i.putExtra("phoneNumberToSearch", phoneNumberToSearch);
-            context.startActivity(i);
         }
     }
 
-    public int getContactId() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return prefs.getInt("contactId", 0);
+    public int getContactIdFromInternalStorage() {
+        iss = new InternalStorageService(context);
+        String contactId = iss.readFromInternalStorage();
+
+        if(contactId != null && !contactId.isEmpty()){
+            return Integer.parseInt(contactId);
+        }
+
+        return 0;
     }
 
-    public void clearContactIdFromPreferences() {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().remove("contactId").commit();
+    public void clearContactIdFromInternalStorage() {
+        iss = new InternalStorageService(context);
+        iss.clearFile();
     }
 
     public void openContactDetails(int phoneContactID) {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setFlags(FLAG_ACTIVITY_NEW_TASK);
         Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(phoneContactID));
-        intent.setData(uri);
-        context.startActivity(intent);
+        i.setData(uri);
+        context.startActivity(i);
     }
 
-    public void storeContactId(int phoneContactID) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        prefs.edit().putInt("contactId", phoneContactID).commit();
+    public void storeContactIdToInternalStorage(int phoneContactID) {
+        iss = new InternalStorageService(context);
+        iss.storeToInternalStorage(String.valueOf(phoneContactID));
     }
 
     public void setPhoneNumberToSearch(String phoneNumberToSearch) {

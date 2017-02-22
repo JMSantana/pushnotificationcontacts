@@ -5,7 +5,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import jmsoft.pushnotificationcontacts.utils.Util;
+import jmsoft.pushnotificationcontacts.util.Util;
 
 public class MessagingService extends FirebaseMessagingService {
 
