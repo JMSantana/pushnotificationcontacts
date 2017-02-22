@@ -14,21 +14,23 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(Util.getAppTag(), "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
+        // Check if message contains a data payload. The phone number should be in the payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(Util.getAppTag(), "Message data payload: " + remoteMessage.getData());
+            String phoneNumberToSearch = remoteMessage.getData().get("phoneNumber");
+
+            if(phoneNumberToSearch != null){
+                ContactsService contactsService = new ContactsService(getApplicationContext());
+                contactsService.setPhoneNumberToSearch(phoneNumberToSearch);
+                contactsService.searchContact();
+            }
         }
 
-        // Check if message contains a notification payload.
+        // Check if message contains a notification payload. Not using the payload this time
         if (remoteMessage.getNotification() != null) {
             Log.d(Util.getAppTag(), "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
-
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
     }
 }
